@@ -18,6 +18,7 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
+import com.api.LibraryAPI.exceptions.BusinessException;
 import com.api.LibraryAPI.models.Book;
 import com.api.LibraryAPI.models.BookDto;
 import com.api.LibraryAPI.service.BookService;
@@ -74,5 +75,25 @@ public class BookControllerTest {
 		mvc.perform(request)
 		.andExpect( status().isBadRequest() )
 		.andExpect( jsonPath( "errors", Matchers.hasSize(3)));
+	}
+	
+	@Test
+	@DisplayName("Deve lançar erro ao tentar criar livro com isbn repetido")
+	public void createBookInvalidIsbn() throws Exception {
+		
+		BookDto book = BookDto.builder().title("O garoto estudioso").author("Escritor").isbn("1690401").build();
+		String json = new ObjectMapper().writeValueAsString(book);
+		BDDMockito.given(bookService.save(Mockito.any(Book.class))).willThrow(new BusinessException("Isbn ja cadastrado"));
+		
+		MockHttpServletRequestBuilder request = MockMvcRequestBuilders.post(BOOK_API)
+				.contentType(MediaType.APPLICATION_JSON)
+				.accept(MediaType.APPLICATION_JSON)
+				.content(json);
+		
+		mvc.perform(request)
+		.andExpect( status().isBadRequest() )
+		.andExpect( jsonPath( "errors", Matchers.hasSize(1)))
+		.andExpect( jsonPath( "errors[0]").value("Isbn ja cadastrado"));
+	
 	}
 }

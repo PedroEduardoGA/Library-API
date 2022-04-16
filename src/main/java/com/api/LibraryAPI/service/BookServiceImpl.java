@@ -1,6 +1,7 @@
 package com.api.LibraryAPI.service;
 
 import org.springframework.stereotype.Service;
+import com.api.LibraryAPI.exceptions.BusinessException;
 import com.api.LibraryAPI.models.Book;
 import com.api.LibraryAPI.repository.BookRepository;
 
@@ -15,6 +16,9 @@ public class BookServiceImpl implements BookService{
 
 	@Override
 	public Book save(Book book) {
+		if( repository.existsByIsbn(book.getIsbn()))
+			throw new BusinessException("Isbn ja cadastrado");
+		
 		return repository.save(book);
 	}
 
