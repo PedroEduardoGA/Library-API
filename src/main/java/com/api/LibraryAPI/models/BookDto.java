@@ -1,8 +1,6 @@
 package com.api.LibraryAPI.models;
 
-import org.springframework.validation.BeanPropertyBindingResult;
-import org.springframework.web.bind.MethodArgumentNotValidException;
-
+import javax.validation.constraints.NotEmpty;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -16,13 +14,13 @@ public class BookDto {
 
 	private Long id;
 	
-	//@NotEmpty
+	@NotEmpty
 	private String title;
 	
-	//@NotEmpty
+	@NotEmpty
 	private String author;
 	
-	//@NotEmpty
+	@NotEmpty
 	private String isbn;
 	
 }
