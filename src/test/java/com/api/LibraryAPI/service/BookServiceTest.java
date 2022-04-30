@@ -1,11 +1,12 @@
 package com.api.LibraryAPI.service;
 
 import static org.assertj.core.api.Assertions.assertThat;
-
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
-
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -19,7 +20,6 @@ import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
-
 import com.api.LibraryAPI.exceptions.BusinessException;
 import com.api.LibraryAPI.models.Book;
 import com.api.LibraryAPI.repository.BookRepository;
@@ -193,5 +193,19 @@ public class BookServiceTest {
 		assertThat(result.getPageable().getPageNumber()).isEqualTo(0);
 		assertThat(result.getPageable().getPageSize()).isEqualTo(10);
 		
+	}
+	
+	@Test
+	@DisplayName("Deve obter um livro pelo isbn")
+	public void getByIsbnTest() {
+		String isbn = "321";
+		when( repository.findByIsbn(isbn)).thenReturn( Optional.of( Book.builder().id(1l).isbn(isbn).build() ));
+		
+		Optional<Book> book = bookService.getBookByIsbn(isbn);
+		
+		assertThat(book.isPresent());
+		assertThat(book.get().getId()).isEqualTo(1l);
+		assertThat(book.get().getIsbn()).isEqualTo(isbn);
+		verify( repository, times(1)).findByIsbn(isbn);
 	}
 }
