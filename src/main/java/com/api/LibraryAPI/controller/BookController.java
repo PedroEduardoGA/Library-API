@@ -9,10 +9,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
-import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -22,8 +19,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.server.ResponseStatusException;
-import com.api.LibraryAPI.exceptions.ApiErrors;
-import com.api.LibraryAPI.exceptions.BusinessException;
 import com.api.LibraryAPI.models.Book;
 import com.api.LibraryAPI.models.BookDto;
 import com.api.LibraryAPI.service.BookService;
@@ -82,19 +77,6 @@ public class BookController {
 	public void delete(@PathVariable Long id) {
 		Book book = bookService.getById(id).orElseThrow( () -> new ResponseStatusException(HttpStatus.NOT_FOUND) );
 		bookService.delete(book);
-	}
-	
-	@ExceptionHandler(MethodArgumentNotValidException.class)//Define que para toda exception do tipo MethodArgumentNotValid será chamado esse método ApiErrors
-	@ResponseStatus(HttpStatus.BAD_REQUEST)
-	public ApiErrors handleValidationExceptions(MethodArgumentNotValidException e) {
-		BindingResult binding = e.getBindingResult();
-		return new ApiErrors(binding);
-	}
-	
-	@ExceptionHandler(BusinessException.class)//Define que para toda exception do tipo MethodArgumentNotValid será chamado esse método ApiErrors
-	@ResponseStatus(HttpStatus.BAD_REQUEST)
-	public ApiErrors handleBusinessExceptions(BusinessException e) {
-		return new ApiErrors(e);
 	}
 	
 	@GetMapping("{id}")

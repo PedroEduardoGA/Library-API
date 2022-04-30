@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import org.springframework.validation.BindingResult;
+import org.springframework.web.server.ResponseStatusException;
 
 public class ApiErrors {
 	private List<String> errors;
@@ -15,6 +16,10 @@ public class ApiErrors {
 
 	public ApiErrors(BusinessException e) {
 		this.errors = Arrays.asList(e.getMessage());
+	}
+	
+	public ApiErrors(ResponseStatusException e) {
+		this.errors = Arrays.asList(e.getReason());
 	}
 
 	public List<String> getErrors() {
