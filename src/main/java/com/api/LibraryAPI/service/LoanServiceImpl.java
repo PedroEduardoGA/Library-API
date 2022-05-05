@@ -1,9 +1,12 @@
 package com.api.LibraryAPI.service;
 
+import java.time.LocalDate;
+import java.util.List;
 import java.util.Optional;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import com.api.LibraryAPI.exceptions.BusinessException;
+import com.api.LibraryAPI.models.Book;
 import com.api.LibraryAPI.models.Loan;
 import com.api.LibraryAPI.models.LoanFilterDto;
 import com.api.LibraryAPI.repository.LoanRepository;
@@ -37,6 +40,18 @@ public class LoanServiceImpl implements LoanService{
 	@Override
 	public Page<Loan> find(LoanFilterDto loanFilter, Pageable pageRequest) {
 		return repository.findByBookIsbnOrCustomer(loanFilter.getIsbn(), loanFilter.getCustomer(), pageRequest);
+	}
+
+	@Override
+	public Page<Loan> getLoansByBook(Book book, Pageable pageable) {
+		return repository.findByBook(book, pageable);
+	}
+
+	@Override
+	public List<Loan> getlAllLateLoans() {
+		final Integer loanDays = 4;
+		LocalDate threeDaysAgo = LocalDate.now().minusDays(loanDays);
+		return repository.findByLoanDateLessThanAndNotReturned(threeDaysAgo);
 	}
 
 }

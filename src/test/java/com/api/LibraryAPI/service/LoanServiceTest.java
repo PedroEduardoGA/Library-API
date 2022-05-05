@@ -5,33 +5,21 @@ import static org.assertj.core.api.Assertions.catchThrowable;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-
 import java.time.LocalDate;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
-
-import org.hamcrest.Matchers;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.BDDMockito;
 import org.mockito.Mockito;
 import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.data.domain.Example;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
-import org.springframework.http.MediaType;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
-import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder;
-import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
-
 import com.api.LibraryAPI.exceptions.BusinessException;
 import com.api.LibraryAPI.models.Book;
 import com.api.LibraryAPI.models.Loan;
@@ -58,7 +46,7 @@ public class LoanServiceTest {
 		//Cenario
 		Loan savingLoan = createLoan();
 		Book book = createLoan().getBook();
-		Loan savedLoan = Loan.builder().id(1l).customer("John Doe").book(book).date(LocalDate.now()).build();
+		Loan savedLoan = Loan.builder().id(1l).CustomerEmail("customer@email").customer("John Doe").book(book).date(LocalDate.now()).build();
 		when( repository.existsByBookAndNotReturned(book) ).thenReturn(false);
 		when( repository.save(savingLoan)).thenReturn(savedLoan);
 		
@@ -135,7 +123,6 @@ public class LoanServiceTest {
 		return Loan.builder().customer("John Doe").book(book).date(LocalDate.now()).build();
 	}
 	
-	@SuppressWarnings("unchecked")
 	@Test
 	@DisplayName("Deve filtrar empréstimos pelas propriedades")
 	public void findLoanTest() throws Exception {
