@@ -1,7 +1,11 @@
 package com.api.LibraryAPI.service;
 
+import java.util.Optional;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import com.api.LibraryAPI.exceptions.BusinessException;
 import com.api.LibraryAPI.models.Loan;
+import com.api.LibraryAPI.models.LoanFilterDto;
 import com.api.LibraryAPI.repository.LoanRepository;
 
 public class LoanServiceImpl implements LoanService{
@@ -18,6 +22,21 @@ public class LoanServiceImpl implements LoanService{
 			throw new BusinessException("Livro ja está emprestado!");
 		
 		return repository.save(loan);
+	}
+
+	@Override
+	public Optional<Loan> getById(Long id) {
+		return repository.findById(id);
+	}
+
+	@Override
+	public Loan update(Loan loan) {
+		return repository.save(loan);
+	}
+
+	@Override
+	public Page<Loan> find(LoanFilterDto loanFilter, Pageable pageRequest) {
+		return repository.findByBookIsbnOrCustomer(loanFilter.getIsbn(), loanFilter.getCustomer(), pageRequest);
 	}
 
 }
