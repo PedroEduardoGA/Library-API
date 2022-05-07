@@ -25,11 +25,15 @@ import com.api.LibraryAPI.models.LoanFilterDto;
 import com.api.LibraryAPI.models.ReturnedLoanDto;
 import com.api.LibraryAPI.service.BookService;
 import com.api.LibraryAPI.service.LoanService;
+
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
 
 @RestController
 @RequestMapping("/api/loans")
 @RequiredArgsConstructor
+@Api("Loan API")
 public class LoanController {
 
 	private final BookService bookService;
@@ -38,6 +42,7 @@ public class LoanController {
 	
 	@PostMapping
 	@ResponseStatus(HttpStatus.CREATED)
+	@ApiOperation("Create a loan")
 	public Long create(@RequestBody LoanDto dto) {
 		Book book = bookService.getBookByIsbn(dto.getIsbn()).orElseThrow( 
 				() -> new ResponseStatusException(HttpStatus.BAD_REQUEST ,"Livro não encontrado para o isbn informado!"));
@@ -51,6 +56,7 @@ public class LoanController {
 	}
 	
 	@PatchMapping("{id}")
+	@ApiOperation("Update a loan returning the book loaned")
 	public void returnBook(@PathVariable Long id,@RequestBody ReturnedLoanDto dto) {
 		Loan loan = loanService.getById(id).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
 		
@@ -59,6 +65,7 @@ public class LoanController {
 	}
 	
 	@GetMapping
+	@ApiOperation("Obtains all loans")
 	public Page<LoanDto> find(LoanFilterDto dto, Pageable pageRequest){
 		Page<Loan> result = loanService.find(dto, pageRequest);
 		List<LoanDto> loans = result
