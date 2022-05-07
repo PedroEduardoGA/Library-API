@@ -22,14 +22,14 @@ public class ApplicationControllerAdvice {
 		return new ApiErrors(binding);
 	}
 	
-	@ExceptionHandler(BusinessException.class)//Define que para toda exception do tipo MethodArgumentNotValid será chamado esse método ApiErrors
+	@ExceptionHandler(BusinessException.class)//Define que para toda exception do tipo BusinessException será chamado esse método ApiErrors
 	@ResponseStatus(HttpStatus.BAD_REQUEST)
 	public ApiErrors handleBusinessExceptions(BusinessException e) {
 		return new ApiErrors(e);
 	}
 	
 	@SuppressWarnings({ "rawtypes", "unchecked" })
-	@ExceptionHandler(ResponseStatusException.class)//Define que para toda exception do tipo MethodArgumentNotValid será chamado esse método ApiErrors
+	@ExceptionHandler(ResponseStatusException.class)//Define que para toda exception do tipo BusinessException será chamado esse método ApiErrors
 	public ResponseEntity handleResponseStatusException(ResponseStatusException ex) {
 		return new ResponseEntity(new ApiErrors(ex), ex.getStatus());
 	}
