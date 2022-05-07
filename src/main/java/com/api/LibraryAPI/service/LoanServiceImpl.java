@@ -5,12 +5,14 @@ import java.util.List;
 import java.util.Optional;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.stereotype.Service;
 import com.api.LibraryAPI.exceptions.BusinessException;
 import com.api.LibraryAPI.models.Book;
 import com.api.LibraryAPI.models.Loan;
 import com.api.LibraryAPI.models.LoanFilterDto;
 import com.api.LibraryAPI.repository.LoanRepository;
 
+@Service
 public class LoanServiceImpl implements LoanService{
 	
 	private LoanRepository repository;

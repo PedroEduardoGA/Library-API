@@ -11,10 +11,7 @@ import org.springframework.scheduling.annotation.EnableScheduling;
 public class LibraryApiApplication {
 	
 	@Bean
-	public ModelMapper modelMapper() {
-		//Define um singleton do tipo modelMapper
-		return new ModelMapper();
-	}
+	public ModelMapper modelMapper() { return new ModelMapper(); }
 	
 	public static void main(String[] args) {
 		SpringApplication.run(LibraryApiApplication.class, args);
